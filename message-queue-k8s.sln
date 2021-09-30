@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "host", "webapi\host.csproj", "{FEE7C895-DA8F-4E96-9933-C2162C43D25E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "message-processor", "message-processor\message-processor.csproj", "{825B4F75-60EE-44A1-AC18-529AD96E32FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "message-processor", "message-processor\message-processor.csproj", "{825B4F75-60EE-44A1-AC18-529AD96E32FC}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{97EC0B88-9B17-49C2-9102-DA8F826151D4}"
 EndProject
