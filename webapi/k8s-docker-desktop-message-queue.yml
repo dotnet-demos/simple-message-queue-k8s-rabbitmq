@@ -1,0 +1,119 @@
+﻿apiVersion: v1
+kind: Namespace
+metadata:
+  name: message-queue-k8s
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi
+  namespace: message-queue-k8s
+  labels:
+    app: webapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+        service: webapi
+    spec:
+      containers:
+        - name: webapicontainer
+          image: joymon/message-queue-api:0.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapiservice
+  namespace: message-queue-k8s
+  labels:
+    app: webapi
+    service: webapi
+spec:
+  type: NodePort
+  ports:
+    - port: 8081
+      targetPort : 80
+      protocol: TCP
+  selector:
+    service: webapi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  namespace: message-queue-k8s
+  labels:
+    app: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+        service: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 15672
+              protocol: TCP
+            - containerPort: 5672
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: message-queue-k8s
+spec:
+  type: ClusterIP
+  ports:
+  - port: 15672
+    targetPort: 15672
+    name: discovery
+  - port: 5672
+    targetPort: 5672
+    name: amqp
+  selector:
+    app: rabbitmq
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-processor
+  namespace: message-queue-k8s
+  labels:
+    app: message-processor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-processsor
+  template:
+    metadata:
+      labels:
+        app: message-processsor
+    spec:
+      containers:
+        - name: message-processsor
+          image: joymon/message-queue-processor:0.0.1
+          imagePullPolicy: IfNotPresent
+---
+
