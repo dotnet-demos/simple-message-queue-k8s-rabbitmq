@@ -1,4 +1,4 @@
-# message-queue-k8s
+# Simple message queue based processing hosted in Kubernetes.
 Message based queue processing system hosted in Kubernetes
 
 # Running using docker-compose
