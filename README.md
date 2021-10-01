@@ -1,5 +1,5 @@
 # Simple message queue based processing hosted in Kubernetes.
-Message based queue processing system hosted in Kubernetes
+A basic implementation of [Queue-Based Load Leveling](https://docs.microsoft.com/en-us/azure/architecture/patterns/queue-based-load-leveling) pattern using RabbitMQ that is hosted in Kubernetes
 
 # Running using docker-compose
 
