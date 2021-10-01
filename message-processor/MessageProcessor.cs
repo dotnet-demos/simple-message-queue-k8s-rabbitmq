@@ -3,14 +3,18 @@ using System.Threading.Tasks;
 
 namespace message_processor
 {
-    class MessageProcessor
+    class MessageProcessor : IMessageProcessor
     {
-        internal async static Task ProcessMessage(string message)
+        async Task IMessageProcessor.ProcessMessage(string message)
         {
-            Logger.WriteLine($"{nameof(ProcessMessage)} - Started");
+            Logger.WriteLine($"{nameof(MessageProcessor)} - Started");
             switch (message)
             {
-                case "crash": throw new InvalidOperationException("Simulated crash");
+                case "crash":
+                    Logger.WriteLine($"Processing crash message with Environment.Exit(1). A new process will start after this.");
+                    Environment.Exit(1);
+                    break;
+                case "exception": throw new InvalidOperationException("Simulated exception");
                 case "delay":
                     Logger.WriteLine($"Processing delay message with simulated 10s delay");
                     await Task.Delay(TimeSpan.FromSeconds(10));
@@ -19,6 +23,7 @@ namespace message_processor
                     Logger.WriteLine("Unknown message");
                     break;
             }
+            Logger.WriteLine($"{nameof(MessageProcessor)} - Completed");
         }
     }
 }

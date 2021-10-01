@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using webapi.Repositories;
 
 namespace SimpleK8sHosting
 {
@@ -38,6 +39,7 @@ namespace SimpleK8sHosting
             .AddConsole()
             .AddConfiguration(Configuration.GetSection("Logging"))
             .SetMinimumLevel(LogLevel.Trace));
+            services.AddSingleton<IMessageRepository, MessageRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,4 +62,5 @@ namespace SimpleK8sHosting
             });
         }
     }
+   
 }
