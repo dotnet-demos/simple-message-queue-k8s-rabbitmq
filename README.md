@@ -13,6 +13,8 @@ Run the below commands from the root of the repository
 
 # Understanding how it works
 - The webapi has actions to queue message to the RabbitMQ
-  - It has no custom UI. We can eitehr use Postman or navigate to the /swagger to queue messages.
+  - It has no custom UI. We can either use Postman or navigate to the /swagger url to queue messages.
 - The message-processor will de-queue messages and output to console. 
 - Based on where it's running we can see the console output.
+  - If it's running via docker-compose, the windows shows the logs automatically.
+  - If it's running in K8s, refer the [commands.ps1](./commands.ps1) file to get commands to view logs. 
