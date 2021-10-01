@@ -1,8 +1,8 @@
 ﻿namespace webapi.Repositories
 {
-    interface IMessageRepository
+    public interface IMessageRepository
     {
         void Send(string message);
-        int Count(string queueName);
+        uint Count(string queueName);
     }
 }

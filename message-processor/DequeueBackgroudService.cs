@@ -14,7 +14,7 @@ namespace message_processor
         private readonly ILogger<DequeueBackgroudService> logger;
         private readonly IModel model;
         IMessageProcessor processor;
-        const string QUEUE_NAME = "myqueue";
+        
         public DequeueBackgroudService(IModel model, IMessageProcessor processor, ILogger<DequeueBackgroudService> logger)
         {
             this.logger = logger;
@@ -27,22 +27,24 @@ namespace message_processor
             //https://stackoverflow.com/a/19163868/181832
             //model.BasicQos(0, 1, false);
             EventingBasicConsumer consumer = new EventingBasicConsumer(model);
-            consumer.Received += (model, ea) =>
+            consumer.Received += (sender, ea) =>
             {
                 var message = Encoding.UTF8.GetString(ea.Body.Span);
-                Logger.WriteLine($"🠗 EventReceived from RabbitMQ: {message}");
+                logger.LogInformation($"🠗 Dequeued from RabbitMQ - DeliveryTag:{ea.DeliveryTag},Redelivered: {ea.Redelivered},msg: {message}");
                 try
                 {
                     processor.ProcessMessage(message).Wait();
-                }catch(Exception ex)
-                {
-                    logger.LogError(ex, "Processing resulted in exception");
                 }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, $"Exception in processing");
+                }
+                model.BasicAck(ea.DeliveryTag, false);
             };
-            model.BasicConsume(queue: QUEUE_NAME,
-                                    autoAck: true,
+            model.BasicConsume(queue:Configurations.QueueName,
+                                    autoAck: false,
                                     consumer: consumer);
-            logger.LogInformation($"{nameof(ExecuteAsync)} - Started listening on {QUEUE_NAME}");
+            logger.LogInformation($"{nameof(ExecuteAsync)} - Started listening on {Configurations.QueueName}");
             return Task.CompletedTask;
         }
     }

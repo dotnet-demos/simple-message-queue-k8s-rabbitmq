@@ -1,20 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
 using webapi.Repositories;
 
-namespace SimpleK8sHosting
+namespace webapi
 {
     public class Startup
     {
@@ -32,7 +25,7 @@ namespace SimpleK8sHosting
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Simple K8s ConfigMap", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI to queue messages to RabbitMQ", Version = "v1" });
             });
             services.AddLogging(builder => builder
             .AddDebug()
@@ -49,7 +42,7 @@ namespace SimpleK8sHosting
             Console.WriteLine("Enabling swagger support always");
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SimpleK8sHosting v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
             //app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -62,5 +55,4 @@ namespace SimpleK8sHosting
             });
         }
     }
-   
 }

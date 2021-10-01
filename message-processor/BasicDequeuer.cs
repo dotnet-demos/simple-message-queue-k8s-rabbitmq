@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Client;
+﻿using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,14 +12,28 @@ namespace message_processor
     [Obsolete]
     class BasicDequeuer
     {
-        static IMessageProcessor processor = new MessageProcessor();
+        //Long technique to create ILogger.
+        static Lazy<IMessageProcessor> processor = new Lazy<IMessageProcessor>(() =>
+        {
+            using ILoggerFactory loggerFactory =
+                LoggerFactory.Create(builder =>
+                    builder.AddSimpleConsole(options =>
+                    {
+                        options.IncludeScopes = true;
+                        options.UseUtcTimestamp = true;
+                    }));
+
+            ILogger<MessageProcessor> logger = loggerFactory.CreateLogger<MessageProcessor>();
+
+            return new MessageProcessor(logger);
+        });
         internal static async Task TryUsingBasicGet(IModel channel)
         {
             Logger.WriteLine($"{nameof(TryUsingBasicGet)} start - infinite loop");
             while (true)
             {
                 var queueingConsumer = new DefaultBasicConsumer(channel);
-                var result = channel.BasicGet("myqueue", false);
+                var result = channel.BasicGet(Configurations.QueueName, false);
                 if (result == null)
                 {
                     Logger.WriteLine($"{nameof(TryUsingBasicGet)} - No messages found. Sleeping for 5 secs");
@@ -33,7 +48,7 @@ namespace message_processor
                     Logger.WriteLine($"{nameof(TryUsingBasicGet)} - 🠗 Dequeued from RabbitMQ - DeliveryTag:{result.DeliveryTag},Redelivered: {result.Redelivered},msg: {message}");
                     try
                     {
-                        await processor.ProcessMessage(message);
+                        await processor.Value.ProcessMessage(message);
                     }
                     catch (Exception ex)
                     {

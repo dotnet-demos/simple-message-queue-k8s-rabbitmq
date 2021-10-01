@@ -1,6 +1,13 @@
 ﻿using RabbitMQ.Client;
-namespace SimpleK8sHosting
+using Shared;
+
+namespace webapi.Repositories
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>Configure all the hard coded values.</remarks>
     class RabbitMQModelFactory
     {
         internal static IModel Get()
@@ -10,7 +17,7 @@ namespace SimpleK8sHosting
             factory.Password = "guest";
             IConnection conn = factory.CreateConnection();
             IModel channel = conn.CreateModel();
-            channel.QueueDeclare(queue: "myqueue",
+            channel.QueueDeclare(queue: Configurations.QueueName,
                                     durable: false,
                                     exclusive: false,
                                     autoDelete: false,

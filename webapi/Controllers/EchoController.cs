@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Dynamic;
-namespace SimpleK8sHosting.Controllers
+namespace webapi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

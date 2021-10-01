@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
-namespace SimpleK8sHosting.Controllers
+namespace webapi.Controllers
 {
     [ApiController]
     public class ConfigurationsController : ControllerBase

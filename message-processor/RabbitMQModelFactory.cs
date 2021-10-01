@@ -16,12 +16,11 @@ namespace message_processor
             factory.Password = "guest";
             IConnection conn = factory.CreateConnection();
             IModel channel = conn.CreateModel();
-            channel.QueueDeclare(queue: "myqueue",
+            channel.QueueDeclare(queue: Configurations.QueueName,
                                     durable: false,
                                     exclusive: false,
                                     autoDelete: false,
                                     arguments: null);
-            
             return channel;
         }
     }
